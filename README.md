@@ -16,9 +16,9 @@ files are written like such:
 
 ```
 # singles
-## Yuaga Iguo
-- [Yuaga Iguo.wav](uploads/[Yuaga Iguo.wav)
-- [Yuaga Iguo (instrumental).wav](uploads/Yuaga Iguo (instrumental).wav)
+## Yuawa Iguo
+- [Yuawa Iguo.wav](uploads/Yuawa Iguo.wav)
+- [Yuawa Iguo (instrumental).wav](uploads/Yuawa Iguo (instrumental).wav)
 
 ## it's like an 'i love you'
 - [its like an i love you but cooler.wav](uploads/its like an i love you but cooler.wav)
@@ -27,3 +27,4 @@ files are written like such:
 ## georges
 ### instrumentals
 ```
+
