@@ -1,12 +1,12 @@
 ## files.md
 
 folders and subfolders and sub-subfolders, etc. are written like such:  
-&nbsp;&nbsp;&nbsp;&nbsp;\# folder  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\## subfolder  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\### sub-subfolder  
+\# folder  
+&nbsp;&nbsp;&nbsp;&nbsp;\## subfolder  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\### sub-subfolder  
 
 files are written like such:  
-&nbsp;&nbsp;&nbsp;&nbsp;- \[filename.ext](uploads/filename.ext)
+- \[filename.ext](uploads/filename.ext)
 
 ### example
 
@@ -23,6 +23,7 @@ files are written like such:
 ## georges
 ### instrumentals
 ```
+
 
 
 
