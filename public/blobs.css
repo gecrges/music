@@ -1,0 +1,267 @@
+#blob-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  filter: blur(80px);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  mix-blend-mode: screen;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  transition: border-radius 1.5s ease, transform 1.5s ease;
+  will-change: border-radius, transform;
+}
+
+/* blobs sizes and colors + base animations */
+.blob1 {
+  width: 350px;
+  height: 350px;
+  background: rgba(255, 80, 80, 0.15);
+  top: 25%;
+  left: 20%;
+  animation-name: blobFadeMove1;
+  animation-duration: 20s;
+}
+
+.blob2 {
+  width: 400px;
+  height: 400px;
+  background: rgba(80, 255, 160, 0.12);
+  top: 50%;
+  left: 55%;
+  animation-name: blobFadeMove2;
+  animation-duration: 25s;
+}
+
+.blob3 {
+  width: 300px;
+  height: 300px;
+  background: rgba(80, 150, 255, 0.15);
+  top: 40%;
+  left: 35%;
+  animation-name: blobFadeMove3;
+  animation-duration: 22s;
+}
+
+.blob4 {
+  width: 450px;
+  height: 450px;
+  background: rgba(255, 180, 80, 0.1);
+  top: 60%;
+  left: 10%;
+  animation-name: blobFadeMove4;
+  animation-duration: 28s;
+}
+
+.blob5 {
+  width: 350px;
+  height: 350px;
+  background: rgba(180, 80, 255, 0.12);
+  top: 30%;
+  left: 70%;
+  animation-name: blobFadeMove5;
+  animation-duration: 30s;
+}
+
+.blob6 {
+  width: 320px;
+  height: 320px;
+  background: rgba(255, 80, 200, 0.15);
+  top: 50%;
+  left: 40%;
+  animation-name: blobFadeMove6;
+  animation-duration: 18s;
+}
+
+.blob7 {
+  width: 400px;
+  height: 400px;
+  background: rgba(80, 255, 255, 0.1);
+  top: 20%;
+  left: 50%;
+  animation-name: blobFadeMove7;
+  animation-duration: 26s;
+}
+
+.blob8 {
+  width: 370px;
+  height: 370px;
+  background: rgba(255, 200, 80, 0.13);
+  top: 55%;
+  left: 65%;
+  animation-name: blobFadeMove8;
+  animation-duration: 24s;
+}
+
+.blob9 {
+  width: 330px;
+  height: 330px;
+  background: rgba(200, 255, 80, 0.15);
+  top: 35%;
+  left: 25%;
+  animation-name: blobFadeMove9;
+  animation-duration: 21s;
+}
+
+.blob10 {
+  width: 360px;
+  height: 360px;
+  background: rgba(80, 80, 255, 0.1);
+  top: 45%;
+  left: 60%;
+  animation-name: blobFadeMove10;
+  animation-duration: 27s;
+}
+
+/* base keyframes for subtle fade and move */
+@keyframes blobFadeMove1 {
+  0%, 100% {
+    opacity: 0.12;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.18;
+    transform: translate(20px, 15px) scale(1.05);
+  }
+}
+
+@keyframes blobFadeMove2 {
+  0%, 100% {
+    opacity: 0.10;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.16;
+    transform: translate(-15px, 20px) scale(1.03);
+  }
+}
+
+@keyframes blobFadeMove3 {
+  0%, 100% {
+    opacity: 0.13;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.20;
+    transform: translate(25px, -10px) scale(1.04);
+  }
+}
+
+@keyframes blobFadeMove4 {
+  0%, 100% {
+    opacity: 0.09;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.14;
+    transform: translate(-20px, -15px) scale(1.06);
+  }
+}
+
+@keyframes blobFadeMove5 {
+  0%, 100% {
+    opacity: 0.11;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.19;
+    transform: translate(15px, 25px) scale(1.02);
+  }
+}
+
+@keyframes blobFadeMove6 {
+  0%, 100% {
+    opacity: 0.14;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.18;
+    transform: translate(-10px, 20px) scale(1.04);
+  }
+}
+
+@keyframes blobFadeMove7 {
+  0%, 100% {
+    opacity: 0.08;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: translate(20px, -20px) scale(1.05);
+  }
+}
+
+@keyframes blobFadeMove8 {
+  0%, 100% {
+    opacity: 0.12;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.17;
+    transform: translate(-25px, 15px) scale(1.03);
+  }
+}
+
+@keyframes blobFadeMove9 {
+  0%, 100% {
+    opacity: 0.15;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.22;
+    transform: translate(30px, -25px) scale(1.06);
+  }
+}
+
+@keyframes blobFadeMove10 {
+  0%, 100% {
+    opacity: 0.10;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.16;
+    transform: translate(-20px, 10px) scale(1.05);
+  }
+}
+
+/* weird liquid morph shape on hover container */
+#hover-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40vw;
+  height: 100vh;
+  pointer-events: auto;
+  /* invisible overlay but active */
+  background: transparent;
+  z-index: 1;
+}
+
+/* morph effect for blobs on hover - border radius to crazy shapes */
+.morphing {
+  border-radius: 40% 60% 70% 30% / 60% 30% 70% 40%;
+  animation-play-state:running !important; /* freeze base animations */
+  transform-origin: center;
+  animation: morphScale 3s ease-in-out infinite alternate;
+}
+
+@keyframes morphScale {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}

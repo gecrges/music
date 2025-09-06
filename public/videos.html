@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>videos</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background-color: #181818;
+      color: #f5f5f5;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+    }
+
+    .video-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      justify-items: center;
+      padding: 1rem 3rem;
+      padding-top: 100px;
+    }
+
+    .video-container {
+      background: #121212;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      text-align: left;
+      max-width: 100%;
+    }
+
+    .video-container p {
+      margin: 6px 0 2px 0;
+    }
+
+    .video-date {
+      font-size: 13px;
+      color: #aaa;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .video-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      display: block;
+    }
+
+    @media (max-width: 1200px) {
+      .video-gallery {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .video-gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .video-gallery {
+        grid-template-columns: 1fr;
+        padding-top: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="logo">georges</a>
+      <div class="nav-links">
+        <a href="videos.html">watch</a>
+        <a href="listen.html">listen</a>
+        <a href="news.html">news</a>
+        <a href="archive.html">archive</a>
+        <a href="index.html#contact">contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="video-gallery" id="video-gallery">
+      <p style="color:#aaa">loading videos…</p>
+    </section>
+  </main>
+
+  <script>
+    fetch('./videos.md')
+      .then(r => r.ok ? r.text() : Promise.reject('could not load videos.md'))
+      .then(text => {
+        const gallery = document.getElementById('video-gallery');
+        gallery.innerHTML = '';
+
+        const postRegex = /(^|\n)---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*?)(?=\n---\s*\n|$)/g;
+        let match;
+
+        while ((match = postRegex.exec(text)) !== null) {
+          const fm = match[2].trim();
+          const meta = {};
+          fm.split(/\r?\n/).forEach(line => {
+            if (!line.trim()) return;
+            const idx = line.indexOf(':');
+            if (idx === -1) return;
+            const key = line.slice(0, idx).trim();
+            let val = line.slice(idx + 1).trim();
+            val = val.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
+            meta[key] = val;
+          });
+
+          const slug = meta.slug || (meta.title ? meta.title.toLowerCase().replace(/[^\w]+/g,'-') : 'video');
+          const thumb = meta.thumbnail || 'img/thumb/placeholder.png';
+          const title = meta.title || '';
+          const date = meta.date || '';
+
+          const container = document.createElement('div');
+          container.className = 'video-container';
+          container.innerHTML = `
+            <a href="videos/${slug}.html">
+              <img src="${thumb}" alt="${title} thumbnail" class="video-thumb">
+              <p>${title}</p>
+              <p class="video-date">${date}</p>
+            </a>
+          `;
+
+          gallery.appendChild(container);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('video-gallery').innerHTML = '<p style="color:#aaa">could not load videos.</p>';
+      });
+  </script>
+
+</body>
+</html>

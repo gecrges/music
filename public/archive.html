@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>archive — georges</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #0d0d0d;
+    color: #fff;
+  }
+
+  .explorer-wrapper {
+    background-color: #1a1a1a;
+    border-radius: 16px;
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;
+    margin: 100px auto; 
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  .breadcrumb {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+
+  .breadcrumb span {
+    cursor: pointer;
+    color: #68a0ff;
+  }
+
+  .breadcrumb span:hover {
+    text-decoration: underline;
+  }
+
+  .file-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+    gap: 20px;
+  }
+
+  .folder-item, .file-item {
+    background: #2a2a2a;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .folder-item:hover, .file-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+  }
+
+  .folder-item img, .file-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  .folder-item span, .file-item span {
+    display: block;
+    word-break: break-word;
+    font-size: 0.85rem;
+  }
+
+  .folder-item img {
+    content: url('https://img.icons8.com/ios-glyphs/90/ffffff/folder-invoices.png');
+  }
+
+  .file-item img {
+    content: url('https://img.icons8.com/ios-glyphs/90/ffffff/document.png');
+  }
+
+  /* scrollbar styling */
+  .file-view::-webkit-scrollbar {
+    width: 8px;
+  }
+  .file-view::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  .file-view::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+  }
+  .file-view::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }
+
+  /* popup modal */
+  .file-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1a1a1a;
+    border-radius: 16px;
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;;
+    max-height: 90vh;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    z-index: 9999;
+  }
+
+  .file-popup.show { display: flex; }
+
+  .file-popup-content {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .file-popup-content img,
+  .file-popup-content video,
+  .file-popup-content audio {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+  }
+
+  .file-popup button.download-btn {
+    align-self: flex-end;
+    background: #68a0ff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .file-popup button.download-btn:hover {
+    background: #4a6edb;
+  }
+
+  .file-popup .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+  }
+  .file-popup-content pre {
+    max-height: 70vh;
+    overflow-y: auto;
+    white-space: pre-wrap; /* wrap long lines */
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="logo">georges</a>
+      <div class="nav-links">
+        <a href="videos.html">watch</a>
+        <a href="listen.html">listen</a>
+        <a href="news.html">news</a>
+        <a href="archive.html">archive</a>
+        <a href="index.html#contact">contact</a>
+      </div>
+    </nav>
+  </header>
+
+<div class="explorer-wrapper">
+  <div id="breadcrumb" class="breadcrumb"></div>
+  <div id="file-view" class="file-view"></div>
+</div>
+
+<div class="file-popup" id="file-popup">
+  <button class="close-btn" id="close-popup">&times;</button>
+  <div class="file-popup-content" id="file-popup-content"></div>
+  <a href="#" target="_blank" id="download-btn" class="download-btn">download</a>
+</div>
+
+<script>
+async function loadFiles() {
+    const res = await fetch('files.md');
+    const mdContent = await res.text();
+    const tree = parseMD(mdContent);
+    renderFolder(tree.children[0]);
+}
+
+function parseMD(md) {
+    const lines = md.split('\n').filter(l=>l.trim()!=='');
+    const root = { name:'root', type:'folder', children:[], parent:null };
+    const stack = [root];
+
+    lines.forEach(line=>{
+        const headerMatch = line.match(/^(#+)\s+(.*)/);
+        const fileMatch = line.match(/^- \[(.*?)\]\((.*?)\)/);
+
+        if(headerMatch){
+            const level = headerMatch[1].length;
+            const name = headerMatch[2];
+            const node = { name, type:'folder', children:[], parent:null };
+            while(stack.length>level) stack.pop();
+            node.parent = stack[stack.length-1];
+            stack[stack.length-1].children.push(node);
+            stack.push(node);
+        } else if(fileMatch){
+            const [_, name, path] = fileMatch;
+            const node = { name, type:'file', path, parent:stack[stack.length-1] };
+            stack[stack.length-1].children.push(node);
+        }
+    });
+    return root;
+}
+
+function renderFolder(folder){
+    const view = document.getElementById('file-view');
+    view.innerHTML='';
+    const breadcrumbEl = document.getElementById('breadcrumb');
+
+    let current = folder;
+    const crumbs = [];
+    while(current){
+        crumbs.unshift(current);
+        current = current.parent;
+    }
+    breadcrumbEl.innerHTML = crumbs.map((c,i)=>{
+        if(i===crumbs.length-1) return `<span>${c.name}</span>`;
+        return `<span data-index="${i}">${c.name}</span> / `;
+    }).join('');
+
+    Array.from(breadcrumbEl.querySelectorAll('span[data-index]')).forEach(span=>{
+        span.addEventListener('click', ()=>renderFolder(crumbs[parseInt(span.dataset.index)]));
+    });
+
+    folder.children.forEach(item=>{
+        const div = document.createElement('div');
+        div.classList.add(item.type==='folder'?'folder-item':'file-item');
+
+        const img = document.createElement('img');
+        div.appendChild(img);
+
+        const span = document.createElement('span');
+        span.textContent=item.name;
+        div.appendChild(span);
+
+        if(item.type==='folder'){
+            div.addEventListener('click', ()=>renderFolder(item));
+        } else {
+            div.addEventListener('click', ()=>showFilePopup(item));
+        }
+        view.appendChild(div);
+    });
+}
+
+function showFilePopup(file){
+    const popup = document.getElementById('file-popup');
+    const content = document.getElementById('file-popup-content');
+    const downloadBtn = document.getElementById('download-btn');
+
+    content.innerHTML = '';
+    let element;
+
+    const ext = file.path.split('.').pop().toLowerCase();
+
+    if(['png','jpg','jpeg','gif','webp'].includes(ext)){
+        element = document.createElement('img');
+        element.src = file.path;
+    } else if(['mp4','webm','mov','ogg'].includes(ext)){
+        element = document.createElement('video');
+        element.src = file.path;
+        element.controls = true;
+        element.autoplay = true;
+    } else if(['mp3','wav','ogg'].includes(ext)){
+        element = document.createElement('audio');
+        element.src = file.path;
+        element.controls = true;
+        element.autoplay = true;
+    }else if(ext === 'txt'){
+    element = document.createElement('pre');
+    fetch(file.path)
+      .then(r => r.text())
+      .then(text => element.textContent = text);
+    } else {
+        element = document.createElement('p');
+        element.textContent = 'Cannot preview this file type';
+    }
+
+    content.appendChild(element);
+    downloadBtn.href = file.path;
+
+    popup.classList.add('show');
+}
+
+document.getElementById('close-popup').addEventListener('click', ()=>{
+    const popup = document.getElementById('file-popup');
+    popup.classList.remove('show');
+    const audioOrVideo = document.querySelector('#file-popup-content video, #file-popup-content audio');
+    if(audioOrVideo) audioOrVideo.pause();
+});
+
+loadFiles();
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #0d0d0d;
+  color: #fff;
+  line-height: 1.6;
+}
+
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.content-section a {
+  color: #68a0ff;
+  text-decoration: underline;
+}
+a:hover {
+  color: #fff;
+}
+
+article a {
+  color: #68a0ff;
+  text-decoration: underline;
+}
+article a:hover {
+  color: #fff;
+}
+
+.site-header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-links a {
+  margin-left: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.hero {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+.listen-hero {
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url('img/image00005.jpg');
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+  padding-top: 70px;
+  box-sizing: border-box;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 1.5s ease;
+}
+
+.hero-title {
+  font-family: 'Inter', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  font-weight: 300;
+  opacity: 0.85;
+}
+
+.content-section {
+  padding: 6rem 2rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.listen-hero .bandcamp-embed {
+  margin-top: 2rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bandcamp-embed {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  padding-top: 50px;
+}
+
+.bandcamp-embed iframe {
+  border: 0;
+  width: 350px;
+  height: 442px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+.read-more-btn {
+  background: none;
+  border: none;
+  color: gray;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  margin-top: 0.5rem;
+  user-select: none;
+}
+
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-slide-down {
+  animation: fadeSlideDown 0.4s ease forwards;
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.fade-slide-up {
+  animation: fadeSlideUp 0.4s ease forwards;
+}
+
+.read-full-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #68a0ff;
+  text-decoration: underline;
+  cursor: pointer;
+  user-select: none;
+}
+.read-full-link:hover {
+  color: #4a6edb;
+}
+
+.video-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  justify-items: center;
+  padding: 1rem 3rem;
+}
+
+.video-container {
+  background: #121212;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  text-align: left;
+  max-width: 100%;
+}
+
+.video-container video {
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+.video-date {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.video-container p {
+  margin: 6px 0 2px 0;
+}
+
+.video-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;  /* keeps 16:9 rectangle */
+  object-fit: cover;     /* crops edges if needed */
+  border-radius: 0.5rem;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2rem 1rem;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .nav {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .nav-links a {
+    margin: 0;
+  }
+
+  .bandcamp-embed iframe {
+    transform: scale(0.8);
+    transform-origin: top center;
+  }
+
+  .bandcamp-embed {
+    padding-top: 100px;
+  }
+
+  .listen-hero {
+    padding: 1rem 0.5rem;
+    background-size: cover;
+    background-position: center top;
+    min-height: 100vh;
+  }
+}

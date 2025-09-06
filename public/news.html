@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>news — georges</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="blobs.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="fadedyn.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #f5f5f5;
+      font-family: 'Inter', sans-serif;
+    }
+    .news-wrapper {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 24px;
+      padding-top: 50px;
+    }
+    .news-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 48px;
+      margin-bottom: 72px;
+      align-items: stretch;
+    }
+    .news-wrapper > .news-item:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+    .news-image {
+      flex: 0 0 46%;
+      max-width: 46%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .news-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      display: block;
+    }
+    .news-text {
+      flex: 1 1 54%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .news-date {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+    .news-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0 0 16px 0;
+      color: #fff;
+      word-break: break-word;
+    }
+    .news-body {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #ddd;
+    }
+    .news-body p {
+      margin: 0 0 14px 0;
+    }
+    .news-body a {
+      color: #68a0ff;
+      text-decoration: underline;
+    }
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 28px 0 0 0;
+      border-radius: 1px;
+    }
+    @media (max-width: 900px) {
+      .news-item {
+        flex-direction: column !important;
+        gap: 24px;
+      }
+      .news-image {
+        flex-basis: 100%;
+        max-width: 100%;
+      }
+      .news-title {
+        font-size: 26px;
+      }
+    }
+    @media (max-width: 520px) {
+      .news-title {
+        font-size: 22px;
+      }
+      .news-body {
+        font-size: 15px;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+<iframe style="position: fixed !important; z-index: -500 !important; border: 0 !important; width: 100% !important; height: 100% !important; opacity: 40%" src="grad.html"></iframe>
+  
+
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="index.html" class="logo">georges</a>
+      <div class="nav-links">
+        <a href="videos.html">watch</a>
+        <a href="listen.html">listen</a>
+        <a href="news.html">news</a>
+        <a href="archive.html">archive</a>
+        <a href="index.html#contact">contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="news-wrapper" id="news-container">
+    <p>loading news…</p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    function truncateHtml(html, wordLimit = 60) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+
+      let wordCount = 0;
+      let done = false;
+
+      function truncateNode(node) {
+        if (done) {
+          node.remove();
+          return;
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) {
+          const words = node.textContent.split(/\s+/);
+          if (wordCount + words.length > wordLimit) {
+            const allowed = wordLimit - wordCount;
+            node.textContent = words.slice(0, allowed).join(' ') + '...';
+            done = true;
+          } else {
+            wordCount += words.length;
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          [...node.childNodes].forEach(truncateNode);
+        }
+      }
+
+      truncateNode(div);
+      return div.innerHTML;
+    }
+
+    function setupReadMore() {
+      document.querySelectorAll('.news-body').forEach(body => {
+        const btn = body.querySelector('.read-more-btn');
+        if (!btn) return;
+
+        if (!body.dataset.fullHtml) {
+          body.dataset.fullHtml = body.innerHTML.replace(btn.outerHTML, '').trim();
+        }
+
+        const fullHtml = body.dataset.fullHtml;
+        const shortHtml = truncateHtml(fullHtml, 60);
+
+        if (fullHtml === shortHtml) {
+          btn.style.display = 'none';
+          return;
+        }
+
+        body.innerHTML = shortHtml;
+        body.appendChild(btn);
+        btn.style.display = 'inline-block';
+        btn.textContent = 'read more';
+
+        btn.onclick = () => {
+          if (btn.textContent === 'read more') {
+            body.innerHTML = fullHtml;
+            body.appendChild(btn);
+            btn.textContent = 'read less';
+
+            body.classList.remove('fade-slide-up');
+            void body.offsetWidth;
+            body.classList.add('fade-slide-down');
+          } else {
+            body.classList.remove('fade-slide-down');
+            void body.offsetWidth;
+            body.classList.add('fade-slide-up');
+
+            btn.disabled = true;
+
+            body.addEventListener('animationend', function handler() {
+              body.removeEventListener('animationend', handler);
+              body.innerHTML = shortHtml;
+              body.appendChild(btn);
+              btn.textContent = 'read more';
+              btn.disabled = false;
+              body.classList.remove('fade-slide-up');
+            });
+          }
+        };
+      });
+    }
+
+    fetch('news.md')
+  .then(r => {
+    if (!r.ok) throw new Error('could not load news.');
+    return r.text();
+  })
+  .then(text => {
+    console.log('loaded news.md content:', text);
+
+    const postRegex = /(^|\n)---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*?)(?=\n---\s*\n|$)/g;
+    const container = document.getElementById('news-container');
+    container.innerHTML = '';
+
+    let match;
+    const posts = [];
+    while ((match = postRegex.exec(text)) !== null) {
+      const fm = match[2].trim();
+      const bodyMd = match[3].trim();
+      const meta = {};
+      fm.split(/\r?\n/).forEach(line => {
+        if (!line.trim()) return;
+        const idx = line.indexOf(':');
+        if (idx === -1) return;
+        const key = line.slice(0, idx).trim();
+        let val = line.slice(idx + 1).trim();
+        val = val.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
+        meta[key] = val;
+      });
+      posts.push({ meta, bodyMd });
+    }
+    console.log('parsed posts:', posts);
+
+    if (posts.length === 0) {
+      container.innerHTML = '<p>could not find news articles.</p>';
+      return;
+    }
+
+        posts.forEach(p => {
+          const htmlBody = marked.parse(p.bodyMd);
+          const img = p.meta.image ? `<div class="news-image fade-in"><img src="${p.meta.image}" alt="${p.meta.title || ''}" onerror="this.style.display='none'"></div>` : '';
+          const dateHtml = p.meta.date ? `<div class="news-date fade-in">${p.meta.date}</div>` : '';
+          const titleHtml = `<h2 class="news-title fade-in">${p.meta.title || ''}</h2>`;
+
+          const slug = p.meta.slug || (p.meta.title ? p.meta.title.toLowerCase().replace(/[^\w]+/g, '-') : 'article');
+
+          const article = document.createElement('article');
+          article.id = slug;
+          article.className = 'news-item fade-in';
+          article.innerHTML = `
+            ${img}
+            <div class="news-text fade-in">
+              ${dateHtml}
+              ${titleHtml}
+              <div class="news-body fade-in">${truncateHtml(htmlBody, 100)}</div>
+              <a href="news/${slug}.html" class="read-full-link fade-in">read full article</a>
+              <div class="divider fade-in"></div>
+            </div>
+          `;
+          container.appendChild(article);
+        });
+
+        observeFadeInElements();
+        setupReadMore();
+
+      })
+      .catch(err => {
+    console.error(err);
+    document.getElementById('news-container').innerHTML = '<p>could not load news.</p>';
+  });
+  </script>
+</body>
+</html>
